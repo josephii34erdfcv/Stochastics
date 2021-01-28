@@ -31,9 +31,11 @@ end
 % Will almost always be zero
 n
 n/M
+%% Modified Part C
+% Skip initial die generation
 
 %% Part D
-% 9 must be the greatest value in the best of 3 case
+% P(A) = P(Z=9)^6 = (3*P(Y=9)^6 = P(3*(25*(1/6)^3))^6 = 0.0017
 clc
 M = 1e6;
 n = 0;
@@ -46,9 +48,10 @@ end
 n
 n/M
 
-%% Part D revised
-%M=1e8; %~60gb array
-rolls = randi(6,3,M,3,6);
+%%
+%% Part C revised
+M=1e8;
+rolls = randi([1,6],3,M,3,6);
 x = sum(rolls,1);
 y = sum(x==18,3);
 % Fraction of experiments resulting in at least one 18
