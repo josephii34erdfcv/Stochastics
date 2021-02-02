@@ -33,6 +33,7 @@ end
 p_1a = pmf_Y(18) 
 
 %% Part B 
+% Keene did this using binomials? 
 % $P(Z=18) = P(Y)*3 = 0.0138$
 rolls = randi(6,3,M,3); % generate 3 trials of 3d6
 x = sum(rolls,1); % combine rolls for score 
