@@ -2,7 +2,8 @@
 %M = 5;
 M = 1e6; % number of experiments to perform 
 %% Part A
-% $P(Y=18) = P(X=6)^3 = (1/6)^3 = 0.0046$ \\
+% $P(Y=18) = P(X=6)^3 = (1/6)^3 = 0.0046$
+
 % 6^3 permutations
 rolls = randi(6,3,M); % generate set of 3d6
 net = sum(rolls,1); % sum rolls to get score
@@ -10,6 +11,7 @@ net = sum(rolls,1); % sum rolls to get score
 sum(net==18)/M
 
 %% Part B 
+% Keene did this using binomials? 
 % $P(Z=18) = P(Y)*3 = 0.0138$
 rolls = randi(6,3,M,3); % generate 3 trials of 3d6
 x = sum(rolls,1); % combine rolls for score 
@@ -20,19 +22,40 @@ sum(y>0)/M
 %% Part C
 % $P(A) = P(Z=18)^6 = 6.9068e-12$
 % Too large to represent with array 
-M = 1e4;
+clc
+M = 5e7; %Tuned for 64GB RAM
+N = 1e2;
 n = 0;
-for i = 0:M
-    rolls = randi(6,3,3,6); % generate 6 trials of 3d6
-    x = sum(rolls,1); % get 3 scores 
-    y = sum(x==18,2); % check if 18
-    n = n + double(sum(y>0)==6); % increment the number of Fontaines
+parfor i = 0:N
+    rolls = randi([4,6],3,M,6,'uint8'); % generate M best of 3 trials of 3d6
+    rolls = sum(rolls,1); % get 3 scores 
+    rolls = sum(rolls==18,2); % check if 18
+    n = n + double(sum(rolls>0)==6); % increment the number of Fontaines
 end
 % Will almost always be zero
 n
+% Fraction of experiments 
 n/M
-
+M*N
+%% Part C GPU Compute
+% Lets 
+clc
+M = 5e7; %Tuned for 64GB RAM
+N = 1e2;
+n = 0;
+parfor i = 0:N
+    rolls = randi([4,6],3,M,6,'uint8'); % generate M best of 3 trials of 3d6
+    rolls = sum(rolls,1); % get 3 scores 
+    rolls = sum(rolls==18,2); % check if 18
+    n = n + double(sum(rolls>0)==6); % increment the number of Fontaines
+end
+% Will almost always be zero
+n
+% Fraction of experiments 
+n/M
+M*N
 %% Part D
+% This part is not correct 
 % 9 must be the greatest value in the best of 3 case
 clc
 %M = 1e6;
