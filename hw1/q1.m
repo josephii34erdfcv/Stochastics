@@ -11,6 +11,7 @@ net = sum(rolls,1); % sum rolls to get score
 sum(net==18)/M
 
 %% Part B 
+% Keene did this using binomials? 
 % $P(Z=18) = P(Y)*3 = 0.0138$
 rolls = randi(6,3,M,3); % generate 3 trials of 3d6
 x = sum(rolls,1); % combine rolls for score 
