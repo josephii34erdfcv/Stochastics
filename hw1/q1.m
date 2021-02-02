@@ -66,14 +66,15 @@ M = 1e6;
 N = 1e0;
 n = 0;
 for i = 0:N
-    rolls = randi(6,3,M,6,'uint8'); % generate M best of 3 trials of 3d6
-    rolls = sum(rolls,1); % get 3 scores 
-    rolls = sum(rolls==18,3); % check if 18
-    n = n + double(sum(rolls>0)==6); % increment the number of Fontaines
+    % generate M 6-sets of best of 3 of 3d6
+    rolls = randi(6,3,3,6,M,'uint8'); 
+    x = sum(rolls,1); % get 3 scores 
+    y = sum(x==18,2); % check if 18
+    n = n + squeeze(sum(sum(y,3)==6)); % increment the number of Fontaines
 end
 % Will almost always be zero
 fprintf("Number of perfect humans found: %d\n", n);
-fprintf("Probability of perfect human: %e\n", n/M);
+fprintf("Probability of perfect human: %e\n", n/(M*N));
 fprintf("Number of trials: %e\n", M*N);
 
 %% Part C GPU Compute
@@ -82,33 +83,17 @@ M = 1e6;
 N = 1e3;
 n = 0;
 for i = 0:N
-    rolls = randi(6,3,M,6,'uint8','gpuArray'); % generate M best of 3 trials of 3d6
-    rolls = sum(rolls,1); % get 3 scores 
-    rolls = sum(rolls==18,3); % check if 18
-    n = n + double(sum(rolls>0)==6); % increment the number of Fontaines
+    rolls = randi(6,3,3,6,M,'uint8','gpuArray');
+    x = sum(rolls,1); % get 3 scores 
+    y = sum(x==18,2); % check if 18
+    n = n + squeeze(sum(sum(y,3)==6));
 end
 fprintf("Number of perfect humans found: %d\n", n);
-fprintf("Probability of perfect human: %e\n", n/M);
+fprintf("Probability of perfect human: %e\n", n/(M*N));
 fprintf("Number of trials: %e\n", M*N);
 
 %% Part C theoretical
 fprintf("Probability of ideal character from PMF: %e", pmf_Z(18)^6);
-
-%% Part D
-% This part is not correct 
-% 9 must be the greatest value in the best of 3 case
-clc
-%M = 1e6;
-M = 1e4;
-n = 0;
-for i = 0:M
-    rolls = randi(6,3,3,6);
-    x = sum(rolls,1);
-    y = sum(x==18,2);
-    n = n + double(sum(y>0)==6);
-end
-n
-n/M
 
 %% Part D
 rolls = randi(6,3,3,6,M); % generate M 6-sets of best of 3 of 3d6
@@ -120,7 +105,7 @@ fprintf("Sampled probability of totally average character: %e\n", n/M);
 
 %% Part D GPU Compute
 M = 1e6;
-N = 1e2;
+N = 1e3;
 %M = 5;
 n = 0;
 for i = 0:N
@@ -130,7 +115,7 @@ for i = 0:N
     n = n + squeeze(sum(sum(y>0,3)==6)); % increment the number of Keenes
 end
 fprintf("Number of totally average humans found: %d\n", n);
-fprintf("Probability of totally average human: %e\n", n/M);
+fprintf("Probability of totally average human: %e\n", n/(M*N));
 fprintf("Number of trials: %e\n", M*N);
 
 %% Part D theoretical
