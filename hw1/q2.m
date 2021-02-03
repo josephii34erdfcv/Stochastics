@@ -30,7 +30,7 @@ kia = hp_new <= 0; % see if dead
 dead = sum(kia,2); % count the dead
 fprintf("Probability of 6 kill: %f\n", sum(dead == 6)/M);
 %% Part D
-% THIS MATH MAY NOT BE VALID 
+% THIS MATH NOT BE VALID 
 
 % Each troll killed independently, troll must have health of at least 3
 % otherwise any fireball will kill. Fireball must do less than 3 damage 
@@ -45,17 +45,6 @@ fprintf("Probability of 6 kill: %f\n", sum(dead == 6)/M);
 kia(dead~=5,:)=1; % find lone survivors 
 survivor_hp = hp_new(~kia); % check their health 
 fprintf("Mean survivor health: %f\n", mean(survivor_hp));
-
-% This stuff is not valid, remove later 
-
-hp = randi([3,4],M,1); % make 3 or 4 health troll
-hp_ave = mean(hp);
-%fprintf("Mean tanky troll: %f\n", hp_ave);
-f = sum(randi(2,M,2),2); % do 2d2
-f(f==4) = []; % remove all instances of 4 dmg fireball
-f_ave = mean(f);
-%fprintf("Mean non-lethal fireball damage: %f\n", f_ave);
-%fprintf("Expected survivor health: %f\n", hp_ave - f_ave);
 
 %% Part E 
 % 50% chance of hitting with sword, 
