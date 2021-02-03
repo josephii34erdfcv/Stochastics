@@ -5,7 +5,7 @@ M = 1e6; % number of experiments to perform
 % Average troll health $= .25*1 + .25*2 + .25*3 +.25*4 = 2.5$
 hp = randi(4,M,1); % set of 1d4
 hp_ave = mean(hp); % average troll health
-fprintf("Average troll health: %f", hp_ave);
+fprintf("Average troll health: %f\n", hp_ave);
 
 %%
 % Average fireball damage $= 0*1 + .25*2 + .50*3 + .25*4 = 3$
@@ -14,7 +14,7 @@ f_dmg = sum(f,2); % compute damage
 f_ave = mean(f_dmg); % average fireball damage
 f_3 = sum(f_dmg>3)/M; % probability damage > 3
 fprintf("Average fireball damage: %f\n", f_ave);
-fprintf("Probability fireball >3: %f", f_3);
+fprintf("Probability fireball >3: %f\n", f_3);
 
 %% Part B
 % I don't know how to do this nice 
@@ -28,7 +28,7 @@ f_dmg = sum(f,2); % compute fireball damage
 hp_new = hp - f_dmg; % attack troll
 kia = hp_new <= 0; % see if dead
 dead = sum(kia,2); % count the dead
-fprintf("Probability of 6 kill: %f", sum(dead == 6)/M);
+fprintf("Probability of 6 kill: %f\n", sum(dead == 6)/M);
 %% Part D
 % THIS MATH MAY NOT BE VALID 
 
@@ -50,11 +50,11 @@ fprintf("Mean survivor health: %f\n", mean(survivor_hp));
 
 hp = randi([3,4],M,1); % make 3 or 4 health troll
 hp_ave = mean(hp);
-fprintf("Mean tanky troll: %f\n", hp_ave);
+%fprintf("Mean tanky troll: %f\n", hp_ave);
 f = sum(randi(2,M,2),2); % do 2d2
 f(f==4) = []; % remove all instances of 4 dmg fireball
 f_ave = mean(f);
-fprintf("Mean non-lethal fireball damage: %f\n", f_ave);
+%fprintf("Mean non-lethal fireball damage: %f\n", f_ave);
 %fprintf("Expected survivor health: %f\n", hp_ave - f_ave);
 
 %% Part E 
