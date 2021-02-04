@@ -59,11 +59,9 @@ end
 
 fprintf("Theoretical probability of 2 kill: %f\n", theoretical_dead);
 %% Part D
-
 % Each troll killed independently, troll must have health of at least 3
 % otherwise any fireball will kill. Fireball must do less than 3 damage 
 % otherwise it will kill any troll. 
-
 
 kia(dead~=1,:)=1; % find lone survivors 
 survivor_hp = hp_new(~kia); % check their health 
@@ -72,7 +70,9 @@ fprintf("Mean survivor health: %f\n", mean(survivor_hp));
 %% Part D Theoretical
 % R = event of the remaining hp of one troll given that exactly one troll
 %   is dead, 0 otherwise
+%
 % k = event that exactly one troll is dead
+%
 % E(P(R given k)) = sum(r * P(R=r given k))
 %   = sum(r * P(R=r and k)/P(k))
 
@@ -106,13 +106,15 @@ dmg = roll_sword.*sword_dmg + roll_sword.*roll_hammer.*hammer_dmg;
 fprintf("Mean Shitvam damage: %f\n", mean(dmg));
 
 %% Part E Theoretical
-% X = dice roll
-% S = sword damage
-% H = hammer damage
-% SH = sword and hammer damage
-% O = 0 damage
-% D = total damage
-% P(D) = 0.5*P(O) + 0.25*P(S) + 0.25*P(SH)
+% X = dice roll,
+% S = sword damage,
+% H = hammer damage, 
+% SH = sword and hammer damage,
+% O = 0 damage,
+% D = total damage,
+%
+% $P(D) = 0.5*P(O) + 0.25*P(S) + 0.25*P(SH)$
+%
 % note that prob of 0 damage is not counted in expectation
 
 joint_pmf_X = ones(6, 6).*(1/6^2);
