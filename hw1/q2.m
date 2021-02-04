@@ -17,8 +17,14 @@ fprintf("Average fireball damage: %f\n", f_ave);
 fprintf("Probability fireball >3: %f\n", f_3);
 
 %% Part B
-% I don't know how to do this nice 
-% How to do nice latex in here?
+% F = event of fireball damage
+% T1, T2 = event of troll hp
+
+pmf_F = [0; 0.25; 0.5; 0.25];
+pmf_T = ones(4, 1).*0.25;
+
+figure; stem(pmf_F); title("PMF of 2d3");
+figure; stem(pmf_T); title("PMF of 1d4");
 
 %% Part C
 
@@ -53,22 +59,38 @@ end
 
 fprintf("Theoretical probability of 2 kill: %f\n", theoretical_dead);
 %% Part D
-
 % Each troll killed independently, troll must have health of at least 3
 % otherwise any fireball will kill. Fireball must do less than 3 damage 
 % otherwise it will kill any troll. 
-
 
 kia(dead~=1,:)=1; % find lone survivors 
 survivor_hp = hp_new(~kia); % check their health 
 fprintf("Mean survivor health: %f\n", mean(survivor_hp));
 
 %% Part D Theoretical
-%case 1: fireball >= 3 and hp is 4
-%case 2: fireball >=2 and hp is 3
-%case 3: fireball >= 2 and hp is 4
-expected_remaining_hp = (3-2)*(1/3)+(4-2)*(1/3)+(4-3)*(1/3); %(troll starting health - fireball damage)*prob
-fprintf("Theoretical mean survivor health: %f\n",expected_remaining_hp);
+% R = event of the remaining hp of one troll given that exactly one troll
+%   is dead, 0 otherwise
+%
+% k = event that exactly one troll is dead
+%
+% E(P(R given k)) = sum(r * P(R=r given k))
+%   = sum(r * P(R=r and k)/P(k))
+
+joint_pmf_TF = pmf_T*pmf_T';
+joint_pmf_TF = reshape(joint_pmf_TF(:)*pmf_F', 4, 4, 4);
+
+[T1, T2, F] = ndgrid(1:4);
+
+R = (F >= T1 & F < T2).*(T2 - F) + ...
+    (F >= T2 & F < T1).*(T1 - F);
+
+p_2d = 0;
+for r=1:2
+    p_2d = p_2d + r*sum(joint_pmf_TF(R == r));
+end
+
+p_2d = p_2d/sum(joint_pmf_TF(R > 0));
+fprintf("Theoretical mean survivor health: %f\n", p_2d);
 
 %% Part E 
 % 50% chance of hitting with sword, 
@@ -83,3 +105,41 @@ hammer_dmg = randi(4,M,1); % generate pontential hammer damage
 dmg = roll_sword.*sword_dmg + roll_sword.*roll_hammer.*hammer_dmg;
 fprintf("Mean Shitvam damage: %f\n", mean(dmg));
 
+%% Part E Theoretical
+% X = dice roll,
+% S = sword damage,
+% H = hammer damage, 
+% SH = sword and hammer damage,
+% O = 0 damage,
+% D = total damage,
+%
+% $P(D) = 0.5*P(O) + 0.25*P(S) + 0.25*P(SH)$
+%
+% note that prob of 0 damage is not counted in expectation
+
+joint_pmf_X = ones(6, 6).*(1/6^2);
+
+[X1, X2] = meshgrid(1:6); 
+S = X1 + X2;
+
+pmf_S = zeros(16, 1);
+for s=2:12
+    pmf_S(s) = sum(joint_pmf_X(S == s));
+end
+
+pmf_H = zeros(16, 1);
+pmf_H(1:4) = 1/4;
+
+joint_pmf_SH = pmf_S*pmf_H';
+[S, H] = meshgrid(1:16);
+SH = S + H;
+
+pmf_SH = zeros(16, 1);
+for sh=2:16
+    pmf_SH(sh) = sum(joint_pmf_SH(SH == sh));
+end
+
+pmf_D = 0.25.*pmf_S + 0.25.*pmf_SH;
+
+p_2e = sum((1:16).*pmf_D');
+fprintf("Theoretical Mean Shitvam damage: %f\n", p_2e);
